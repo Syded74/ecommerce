@@ -50,7 +50,6 @@
                 <a href="{{ url('/home') }}">Home</a>
             @else
                 <a href="{{ route('login') }}">Log in</a>
-
                 @if (Route::has('register'))
                     <a href="{{ route('register') }}">Register</a>
                 @endif
@@ -61,6 +60,24 @@
     <div class="container">
         <h1 class="welcome-title">Welcome to Laravel E-Commerce</h1>
         <p class="welcome-subtitle">Your gateway to a great shopping experience</p>
+    </div>
+
+    <div class="container">
+        <h2>Product List</h2>
+        <div class="row product-list">
+            @foreach($products as $product)
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top" src="{{ $product->image }}" alt="{{ $product->name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $product->name }}</h5>
+                            <p class="card-text">{{ $product->description }}</p>
+                            <p class="card-text">${{ $product->price }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 </body>
 </html>

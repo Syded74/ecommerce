@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -9,7 +10,7 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('showWelcomePage');
     }
 
     public function index()
@@ -25,5 +26,11 @@ class HomeController extends Controller
         } else {
             abort(403, 'Unauthorized');
         }
+    }
+
+    public function showWelcomePage()
+    {
+        $products = Product::all();
+        return view('welcome', compact('products'));
     }
 }

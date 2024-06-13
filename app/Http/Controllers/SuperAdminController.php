@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('superadmin.dashboard', compact('users'));
+        $admins = User::role('admin')->get();
+        return view('superadmin.dashboard', compact('admins'));
     }
 
     public function createAdmin()
@@ -26,13 +27,13 @@ class SuperAdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
+        $admin = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('admin');
+        $admin->assignRole('admin');
 
         return redirect()->route('superadmin.dashboard')->with('success', 'Admin created successfully.');
     }
