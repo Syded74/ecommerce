@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Product; // Add this line
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = \App\Models\Product::all(); // Ensure the correct namespace is used
         return view('admin.dashboard', compact('products'));
     }
 
@@ -23,12 +22,15 @@ class AdminController extends Controller
 
     public function storeUser(Request $request)
     {
+        Log::info('storeUser method called'); // Add this line for logging
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:user,admin,super-admin',
         ]);
+
+        Log::info('Validation passed'); // Add this line for logging
 
         $user = User::create([
             'name' => $request->name,
@@ -36,7 +38,9 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole($request->role);
+        Log::info('User created: ' . $user->id); // Add this line for logging
+
+        $user->assignRole('user'); // Automatically assign the 'user' role
 
         return redirect()->route('admin.dashboard')->with('success', 'User created successfully.');
     }

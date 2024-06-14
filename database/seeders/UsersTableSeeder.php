@@ -3,35 +3,49 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Creating  Super Admin
-        $superAdmin = User::create([
-            'name' => 'superadmin',
-            'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
-        $superAdmin->assignRole('super-admin');
+        // Check if the super-admin user already exists
+        if (!User::where('email', 'superadmin@gmail.com')->exists()) {
+            // Create the super-admin user
+            $superAdmin = User::create([
+                'name' => 'superadmin',
+                'email' => 'superadmin@gmail.com',
+                'password' => Hash::make('password'), // Use a secure password
+            ]);
 
-        // Creating  Admin
-        $admin = User::create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
-        $admin->assignRole('admin');
+            // Assign the super-admin role
+            $superAdmin->assignRole('super-admin');
+        }
 
-        // Creating  User
-        $user = User::create([
-            'name' => 'user',
-            'email' => 'user@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
-        $user->assignRole('user');
+        // Similarly, check and create other users if needed
+        // Check if the admin user already exists
+        if (!User::where('email', 'admin@gmail.com')->exists()) {
+            $admin = User::create([
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('password'), // Use a secure password
+            ]);
+
+            // Assign the admin role
+            $admin->assignRole('admin');
+        }
+
+        // Check if the user already exists
+        if (!User::where('email', 'user@gmail.com')->exists()) {
+            $user = User::create([
+                'name' => 'user',
+                'email' => 'user@gmail.com',
+                'password' => Hash::make('password'), // Use a secure password
+            ]);
+
+            // Assign the user role
+            $user->assignRole('user');
+        }
     }
 }

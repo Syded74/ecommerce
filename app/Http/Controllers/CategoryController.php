@@ -2,26 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brand;
 use Illuminate\Http\Request;
+use App\Models\Category;
 
-class BrandController extends Controller
+class CategoryController extends Controller
 {
     public function index()
     {
-        $brands = Brand::all();
-        return view('admin.brands.index', compact('brands'));
+        $categories = Category::all();
+        return view('admin.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        return view('admin.brands.create');
+        return view('admin.categories.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required']);
-        Brand::create(['name' => $request->name]);
-        return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully');
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories',
+        ]);
+
+        Category::create($request->all());
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 }

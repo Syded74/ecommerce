@@ -3,8 +3,6 @@
 @section('content')
 <div class="container">
     <h1>Products</h1>
-    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Create Product</a>
-
     <table class="table">
         <thead>
             <tr>
@@ -24,8 +22,8 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
-                    <td>{{ $product->brand->name }}</td>
-                    <td>{{ $product->category->name }}</td>
+                    <td>{{ $product->brand ? $product->brand->name : 'N/A' }}</td>
+                    <td>{{ $product->category ? $product->category->name : 'N/A' }}</td>
                     <td><img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}" width="100"></td>
                 </tr>
             @endforeach
