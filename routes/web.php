@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,6 +37,10 @@ Route::middleware(['role:admin'])->group(function () {
 
 Route::middleware(['role:user'])->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::get('/order/place', [OrderController::class, 'placeOrder'])->name('order.place');
 });
 
 Route::get('/force-logout', function() {

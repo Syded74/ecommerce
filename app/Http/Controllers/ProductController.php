@@ -24,26 +24,27 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'image' => 'required|image',
-            'brand_id' => 'required|exists:brands,id',
-            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-        $path = $request->file('image')->store('images', 'public');
-
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $path,
-            'brand_id' => $request->brand_id,
-            'category_id' => $request->category_id,
-        ]);
-
+    
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+    
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();  
+            $request->image->storeAs('public/products', $imageName);
+            $product->image = $imageName;
+        }
+    
+        $product.save();
+    
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
+    
 }
