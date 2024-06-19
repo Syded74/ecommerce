@@ -6,10 +6,24 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-sm {
+            margin-left: 5px;
+        }
+        .admin-sidebar {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"></a>
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -21,7 +35,6 @@
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
                     @endif
-
                     @if (Route::has('register'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('register') }}">Register</a>

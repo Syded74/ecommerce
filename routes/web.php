@@ -36,10 +36,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // Add this line
+    Route::post('/users/store', [UserController::class, 'store'])->name('users.store');   // Add this line
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy'); // Add this line
 });
+
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('user.dashboard');
