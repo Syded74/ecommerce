@@ -3,14 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
 use Illuminate\Support\Facades\Session;
+use App\Models\Product;
 
 class CartController extends Controller
 {
+    public function viewCart()
+    {
+        $cart = Session::get('cart', []);
+        return view('cart.view', compact('cart'));
+    }
+
     public function addToCart($id)
     {
         $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->route('cart.view')->with('error', 'Product not found.');
+        }
 
         $cart = Session::get('cart', []);
 
@@ -18,23 +28,16 @@ class CartController extends Controller
             $cart[$id]['quantity']++;
         } else {
             $cart[$id] = [
-                "name" => $product->name,
-                "quantity" => 1,
-                "price" => $product->price,
-                "image" => $product->image
+                'name' => $product->name,
+                'quantity' => 1,
+                'price' => $product->price,
+                'image' => $product->image
             ];
         }
 
         Session::put('cart', $cart);
 
-        return redirect()->back()->with('success', 'Product added to cart!');
-    }
-
-    public function viewCart()
-    {
-        $cart = Session::get('cart', []);
-
-        return view('cart.index', compact('cart'));
+        return redirect()->route('cart.view')->with('success', 'Product added to cart.');
     }
 
     public function removeFromCart($id)
@@ -46,6 +49,6 @@ class CartController extends Controller
             Session::put('cart', $cart);
         }
 
-        return redirect()->back()->with('success', 'Product removed from cart!');
+        return redirect()->route('cart.view')->with('success', 'Product removed from cart.');
     }
 }

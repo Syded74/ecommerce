@@ -12,7 +12,7 @@ class BrandController extends Controller
         $brands = Brand::all();
         return view('admin.brands.index', compact('brands'));
     }
-
+    
     public function create()
     {
         return view('admin.brands.create');
@@ -21,11 +21,13 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:brands',
+            'name' => 'required|string|max:255',
         ]);
 
-        Brand::create($request->all());
+        $brand = new Brand();
+        $brand->name = $request->name;
+        $brand->save();
 
-        return redirect()->route('admin.brands.index')->with('success', 'Brand created successfully.');
+        return redirect()->route('admin.brands')->with('success', 'Brand created successfully');
     }
 }

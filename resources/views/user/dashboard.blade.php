@@ -15,10 +15,13 @@
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">{{ $product->description }}</p>
                         <p class="card-text">${{ $product->price }}</p>
+                        <a href="{{ route('cart.add', $product->id) }}" class="btn btn-primary">Add to Cart</a>
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
+
+    <a href="{{ route('cart.view') }}" class="btn btn-success mt-3">View Cart</a>
 </div>
 @endsection
