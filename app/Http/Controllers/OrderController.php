@@ -17,6 +17,15 @@ class OrderController extends Controller
         $orders = Order::all();
         return view('admin.orders.index', compact('orders'));
     }
+
+    public function destroy($id)
+{
+    $order = Order::find($id);
+    $order->delete();
+
+    return redirect()->route('admin.orders')->with('success', 'Order deleted successfully.');
+}
+
     
 
     public function show($id)
@@ -75,6 +84,8 @@ class OrderController extends Controller
             Log::info('OrderItem saved for product ID ' . $id);
         }
     
+
+        
         Session::forget('cart');
     
         Log::info('Order placed successfully');
