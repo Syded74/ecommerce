@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $products = \App\Models\Product::all(); // Ensure the correct namespace is used
+        $products = \App\Models\Product::all();
         return view('admin.dashboard', compact('products'));
     }
 
@@ -22,7 +22,7 @@ class AdminController extends Controller
 
     public function storeUser(Request $request)
     {
-        Log::info('storeUser method called'); // Add this line for logging
+        Log::info('storeUser method called');
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -30,15 +30,15 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        Log::info('Validation passed'); // Add this line for logging
+        Log::info('Validation passed');
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password), // Ensure password is hashed
         ]);
 
-        Log::info('User created: ' . $user->id); // Add this line for logging
+        Log::info('User created: ' . $user->id);
 
         $user->assignRole('user'); // Automatically assign the 'user' role
 

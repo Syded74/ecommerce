@@ -37,4 +37,16 @@ class SuperAdminController extends Controller
 
         return redirect()->route('superadmin.dashboard')->with('success', 'Admin created successfully.');
     }
+
+    public function deleteAdmin($id)
+    {
+        $admin = User::findOrFail($id);
+
+        if ($admin->hasRole('admin')) {
+            $admin->delete();
+            return redirect()->route('superadmin.dashboard')->with('success', 'Admin deleted successfully.');
+        }
+
+        return redirect()->route('superadmin.dashboard')->with('error', 'User is not an admin.');
+    }
 }

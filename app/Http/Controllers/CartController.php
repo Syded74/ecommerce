@@ -9,7 +9,7 @@ use App\Models\Product;
 class CartController extends Controller
 {
     public function viewCart()
-    {
+    {       
         $cart = Session::get('cart', []);
         return view('cart.view', compact('cart'));
     }

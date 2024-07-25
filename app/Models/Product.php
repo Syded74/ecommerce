@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'price', 'image', 'brand_id', 'category_id'];
+    protected $fillable = ['name', 'description', 'price', 'image', 'brand_id', 'category_id' ];
 
     public function brand()
     {
@@ -25,4 +26,6 @@ class Product extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    
 }

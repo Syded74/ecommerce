@@ -4,11 +4,11 @@
 <div class="container">
     <h1>Admin Dashboard</h1>
     <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('admin.products') }}" class="btn btn-primary">Manage Products</a>
-        <a href="{{ route('admin.brands') }}" class="btn btn-primary">Manage Brands</a>
-        <a href="{{ route('admin.categories') }}" class="btn btn-primary">Manage Categories</a>
+        <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Manage Products</a>
+        <a href="{{ route('admin.brands.index') }}" class="btn btn-primary">Manage Brands</a>
+        <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">Manage Categories</a>
         <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create User</a>
-        <a href="{{ route('admin.orders') }}" class="btn btn-primary">View Orders</a>
+        <a href="{{ route('admin.orders.index') }}" class="btn btn-primary">View Orders</a>
     </div>
     <h2>Product List</h2>
     <div class="row product-list">

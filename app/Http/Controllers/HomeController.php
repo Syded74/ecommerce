@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -15,7 +14,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
         if ($user->hasRole('super-admin')) {
             return redirect()->route('superadmin.dashboard');
@@ -30,7 +29,7 @@ class HomeController extends Controller
 
     public function showWelcomePage()
     {
-        $products = Product::all();
+        $products = Product::all(); // Ensure this queries the correct model and table
         return view('welcome', compact('products'));
     }
 }

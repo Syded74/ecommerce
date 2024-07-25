@@ -5,46 +5,43 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Check if the super-admin user already exists
+        Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'user']);
+
+        // Create Super Admin
         if (!User::where('email', 'superadmin@gmail.com')->exists()) {
-            // Create the super-admin user
             $superAdmin = User::create([
                 'name' => 'superadmin',
                 'email' => 'superadmin@gmail.com',
-                'password' => Hash::make('password'), // Use a secure password
+                'password' => Hash::make('password'),
             ]);
-
-            // Assign the super-admin role
             $superAdmin->assignRole('super-admin');
         }
 
-        // Similarly, check and create other users if needed
-        // Check if the admin user already exists
+        // Create Admin
         if (!User::where('email', 'admin@gmail.com')->exists()) {
             $admin = User::create([
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
-                'password' => Hash::make('password'), // Use a secure password
+                'password' => Hash::make('password'),
             ]);
-
-            // Assign the admin role
             $admin->assignRole('admin');
         }
 
-        // Check if the user already exists
+        // Create User
         if (!User::where('email', 'user@gmail.com')->exists()) {
             $user = User::create([
                 'name' => 'user',
                 'email' => 'user@gmail.com',
-                'password' => Hash::make('password'), // Use a secure password
+                'password' => Hash::make('password'),
             ]);
-
-            // Assign the user role
             $user->assignRole('user');
         }
     }
