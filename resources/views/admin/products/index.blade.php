@@ -3,79 +3,69 @@
 @section('title', 'Admin Products')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-3 admin-sidebar">
-            <h4>Admin Dashboard</h4>
-            <div class="list-group">
-                <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action active">Products</a>
-                <a href="{{ route('admin.brands.index') }}" class="list-group-item list-group-item-action">Brands</a>
-                <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action">Categories</a>
-                <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">Users</a>
-                <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action">Orders</a>
-            </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold">Products</h1>
+        <div>
+            <a href="{{ route('admin.products.create') }}" class="bg-green-900 text-white px-4 py-2 rounded">Add Product</a>
+            <a href="{{ route('admin.products.index', ['filter' => 'deleted']) }}" class="bg-danger text-white px-4 py-2 rounded">Deleted Products</a>
+            <a href="{{ route('admin.products.index', ['filter' => 'all']) }}" class="bg-green-900 text-white px-4 py-2 rounded">All Products</a>
         </div>
-        <div class="col-md-9">
-            <h1 class="mb-4">Products</h1>
-            <a href="{{ route('admin.products.create') }}" class="btn btn-primary mb-4">Add Product</a>
-            <div class="mb-4">
-                <a href="{{ route('admin.products.index', ['filter' => 'deleted']) }}" class="btn btn-danger">Deleted Products</a>
-                <a href="{{ route('admin.products.index', ['filter' => 'all']) }}" class="btn btn-secondary">All Products</a>
-            </div>
-            <table class="table table-striped table-hover">
-                <thead class="thead-dark">
+    </div>
+
+    <div class="bg-white shadow-md rounded my-6">
+        <table class="min-w-full bg-white">
+            <thead class="bg-green-900 text-white">
+                <tr>
+                    <th class="w-1/12 py-3 px-4 uppercase font-semibold text-sm">ID</th>
+                    <th class="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Name</th>
+                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Description</th>
+                    <th class="w-1/12 py-3 px-4 uppercase font-semibold text-sm">Price</th>
+                    <th class="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Brand</th>
+                    <th class="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Category</th>
+                    <th class="w-1/12 py-3 px-4 uppercase font-semibold text-sm">Image</th>
+                    <th class="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                @forelse ($products as $product)
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Brand</th>
-                        <th>Category</th>
-                        <th>Image</th>
-                        <th>Actions</th>
+                        <td class="py-3 px-4">{{ $product->id }}</td>
+                        <td class="py-3 px-4">{{ $product->name }}</td>
+                        <td class="py-3 px-4">{{ $product->description }}</td>
+                        <td class="py-3 px-4">${{ number_format($product->price, 2) }}</td>
+                        <td class="py-3 px-4">{{ $product->brand->name }}</td>
+                        <td class="py-3 px-4">{{ $product->category->name }}</td>
+                        <td class="py-3 px-4"><img src="{{ asset('storage/products/'.$product->image) }}" alt="{{ $product->name }}" class="w-16 h-16 object-cover"></td>
+                        <td class="py-3 px-4">
+                            <a href="{{ route('admin.products.show', $product->id) }}" class="bg-green-900 text-white px-2 py-1 rounded inline-block">View</a>
+                            @if($product->trashed())
+                                <form action="{{ route('admin.products.restore', $product->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="bg-secondary text-white px-2 py-1 rounded">Restore</button>
+                                </form>
+                                <form action="{{ route('admin.products.forceDelete', $product->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-danger text-white px-2 py-1 rounded">Delete Permanently</button>
+                                </form>
+                            @else
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-danger text-white px-2 py-1 rounded" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                                </form>
+                            @endif
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @forelse ($products as $product)
-                        <tr>
-                            <td>{{ $product->id }}</td>
-                            <td>{{ $product->name }}</td>
-                            <td>{{ $product->description }}</td>
-                            <td>${{ number_format($product->price, 2) }}</td>
-                            <td>{{ $product->brand->name }}</td>
-                            <td>{{ $product->category->name }}</td>
-                            <td><img src="{{ asset('storage/products/'.$product->image) }}" alt="{{ $product->name }}" width="50"></td>
-                            <td>
-                                <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-primary btn-sm">View</a>
-                                @if($product->trashed())
-                                    <form action="{{ route('admin.products.restore', $product->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
-                                    </form>
-                                    <form action="{{ route('admin.products.forceDelete', $product->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete Permanently</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center">No products found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center py-4">No products found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

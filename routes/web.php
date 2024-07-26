@@ -10,6 +10,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ProfileController;
+
 
 Route::get('/', [HomeController::class, 'showWelcomePage'])->name('welcome');
 
@@ -80,13 +82,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
-    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::get('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/order/place', [OrderController::class, 'placeOrder'])->name('order.place');
+Route::middleware(['auth'])->group(function () {
+    Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 });
+
 
 Route::get('/force-logout', function() {
     Auth::logout();

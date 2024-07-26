@@ -18,6 +18,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo', 
     ];
 
     protected $hidden = [
@@ -33,5 +34,10 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ? $value : 'path/to/default-avatar.png';
     }
 }

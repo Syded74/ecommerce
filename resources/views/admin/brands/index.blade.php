@@ -3,85 +3,72 @@
 @section('title', 'Admin Brands')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-3 admin-sidebar">
-            <h4>Admin Dashboard</h4>
-            <div class="list-group">
-                <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
-                <a href="{{ route('admin.products.index') }}" class="list-group-item list-group-item-action">Products</a>
-                <a href="{{ route('admin.brands.index') }}" class="list-group-item list-group-item-action active">Brands</a>
-                <a href="{{ route('admin.categories.index') }}" class="list-group-item list-group-item-action">Categories</a>
-                <a href="{{ route('admin.users.index') }}" class="list-group-item list-group-item-action">Users</a>
-                <a href="{{ route('admin.orders.index') }}" class="list-group-item list-group-item-action">Orders</a>
-            </div>
-        </div>
-        <div class="col-md-9">
-            <h1 class="mb-4">Brands</h1>
-            <a href="{{ route('admin.brands.create') }}" class="btn btn-primary mb-4">Add Brand</a>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">Brands</h1>
+    <a href="{{ route('admin.brands.create') }}" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700 mb-4 inline-block">Add Brand</a>
 
-            <div class="mb-4">
-                <a href="{{ route('admin.brands.index', ['filter' => 'active']) }}" class="btn btn-outline-primary">Active</a>
-                <a href="{{ route('admin.brands.index', ['filter' => 'inactive']) }}" class="btn btn-outline-secondary">Inactive</a>
-                <a href="{{ route('admin.brands.index', ['filter' => 'deleted']) }}" class="btn btn-outline-danger">Deleted</a>
-                <a href="{{ route('admin.brands.index', ['filter' => 'all']) }}" class="btn btn-outline-secondary">All</a>
-            </div>
+    <div class="mb-4 flex space-x-2">
+        <a href="{{ route('admin.brands.index', ['filter' => 'active']) }}" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700">Active</a>
+        <a href="{{ route('admin.brands.index', ['filter' => 'inactive']) }}" class="bg-green-900  text-white px-4 py-2 rounded hover:bg-gray-700">Inactive</a>
+        <a href="{{ route('admin.brands.index', ['filter' => 'deleted']) }}" class="bg-danger text-white px-4 py-2 rounded hover:bg-red-700">Deleted</a>
+        <a href="{{ route('admin.brands.index', ['filter' => 'all']) }}" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-gray-700">All</a>
+    </div>
 
-            <table class="table table-striped table-hover">
-                <thead class="thead-dark">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead class="bg-green-900 text-white">
+                <tr>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-white uppercase tracking-wider">ID</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-white uppercase tracking-wider">Name</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-white uppercase tracking-wider">Description</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-white uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-white uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($brands as $brand)
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $brand->id }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $brand->name }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $brand->description }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $brand->status }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <a href="{{ route('admin.brands.show', $brand->id) }}" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-blue-700">View</a>
+                            @if($brand->trashed())
+                                <form action="{{ route('admin.brands.restore', $brand->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-900">Restore</button>
+                                </form>
+                                <form action="{{ route('admin.brands.forceDelete', $brand->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Delete Permanently</button>
+                                </form>
+                            @else
+                                <form action="{{ route('admin.brands.updateStatus', $brand->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" onchange="this.form.submit()" class="bg-gray-200 text-green-950 rounded-lg px-4 py-2">
+                                        <option value="active" {{ $brand->status == 'active' ? 'selected' : '' }}>Active</option>
+                                        <option value="inactive" {{ $brand->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+                                </form>
+                                <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
+                                </form>
+                            @endif
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @forelse ($brands as $brand)
-                        <tr>
-                            <td>{{ $brand->id }}</td>
-                            <td>{{ $brand->name }}</td>
-                            <td>{{ $brand->description }}</td>
-                            <td>{{ $brand->status }}</td>
-                            <td>
-                                <a href="{{ route('admin.brands.show', $brand->id) }}" class="btn btn-primary btn-sm">View</a>
-                                @if($brand->trashed())
-                                    <form action="{{ route('admin.brands.restore', $brand->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
-                                    </form>
-                                    <form action="{{ route('admin.brands.forceDelete', $brand->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete Permanently</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('admin.brands.updateStatus', $brand->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status" onchange="this.form.submit()">
-                                            <option value="active" {{ $brand->status == 'active' ? 'selected' : '' }}>Active</option>
-                                            <option value="inactive" {{ $brand->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                        </select>
-                                    </form>
-                                    <form action="{{ route('admin.brands.destroy', $brand->id) }}" method="POST" style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No brands found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">No brands found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

@@ -1,26 +1,18 @@
 @extends('layouts.app')
 
+@section('title', 'Admin Dashboard')
+
 @section('content')
 <div class="container">
-    <h1>Admin Dashboard</h1>
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Manage Products</a>
-        <a href="{{ route('admin.brands.index') }}" class="btn btn-primary">Manage Brands</a>
-        <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">Manage Categories</a>
-        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create User</a>
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-primary">View Orders</a>
-    </div>
-    <h2>Product List</h2>
-    <div class="row product-list">
+    <h2 class="mt-6 text-2xl font-bold">Admin Dashboard</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
         @foreach($products as $product)
-            <div class="col-md-4">
-                <div class="card">
-                    <img class="card-img-top" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $product->name }}</h5>
-                        <p class="card-text">{{ $product->description }}</p>
-                        <p class="card-text">${{ $product->price }}</p>
-                    </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <img class="w-full h-48 object-cover" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
+                <div class="p-4">
+                    <h5 class="text-lg font-bold text-gray-800">{{ $product->name }}</h5>
+                    <p class="text-gray-600">{{ $product->description }}</p>
+                    <p class="text-success font-bold mt-2">${{ $product->price }}</p>
                 </div>
             </div>
         @endforeach
