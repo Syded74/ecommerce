@@ -9,9 +9,9 @@ use App\Models\Product;
 class CartController extends Controller
 {
     public function viewCart()
-    {       
+    {
         $cart = Session::get('cart', []);
-        return view('cart.view', compact('cart'));
+        return view('user.cart.view', compact('cart'));
     }
 
     public function addToCart($id)

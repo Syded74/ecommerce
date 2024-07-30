@@ -1,27 +1,30 @@
-@extends('layouts.app')
-
+@extends('layouts.user_without_sidebar')
+@section('title', 'User Dashboard')
 @section('content')
-<div class="container">
-    <h1>User Dashboard</h1>
-    <p>Welcome to your dashboard!</p>
-
-    <h2>Product List</h2>
-    <div class="row product-list">
-        @foreach($products as $product)
-            <div class="col-md-4">
-                <div class="card">
-                <img class="card-img-top" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $product->name }}</h5>
-                        <p class="card-text">{{ $product->description }}</p>
-                        <p class="card-text">${{ $product->price }}</p>
-                        <a href="{{ route('cart.add', $product->id) }}" class="btn btn-primary">Add to Cart</a>
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-green-600">
+        <h1 class="text-2xl font-bold leading-tight text-white">User Dashboard</h1>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+        <p class="mb-6">Welcome to your dashboard!</p>
+        <h2 class="text-xl font-semibold mb-4">Product List</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($products as $product)
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <img class="w-full h-48 object-cover" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
+                    <div class="p-4">
+                        <h5 class="text-lg font-semibold">{{ $product->name }}</h5>
+                        <p class="text-gray-600">{{ $product->description }}</p>
+                        <p class="text-gray-800 font-bold mt-2">${{ $product->price }}</p>
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-4">
+                            @csrf
+                            <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300">Add to Cart</button>
+                        </form>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
+        <a href="{{ route('cart.view') }}" class="mt-6 inline-block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-300">View Cart</a>
     </div>
-
-    <a href="{{ route('cart.view') }}" class="btn btn-success mt-3">View Cart</a>
 </div>
 @endsection
