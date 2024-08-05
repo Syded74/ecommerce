@@ -75,10 +75,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
  Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
  // Admin profile routes
- Route::get('profile', [AdminProfileController::class, 'show'])->name('profile.show');
- Route::get('profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
- Route::patch('profile/update', [AdminProfileController::class, 'update'])->name('profile.update');
-
+ Route::get('profile', [AdminProfileController::class, 'show'])->name('admin.profile.show');
+ Route::get('profile/edit', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+ Route::patch('profile/update', [AdminProfileController::class, 'update'])->name('admin.profile.update');
   //Order routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
