@@ -8,12 +8,15 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCreatedMail;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/users'; // Change this to your desired redirect path
 
     public function __construct()
     {
@@ -24,7 +27,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -37,8 +40,14 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $user->assignRole('user'); // Assign 'user' role to the new user
+        $user->assignRole('user');
+        Mail::to($user->email)->send(new UserCreatedMail($user));
 
         return $user;
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        return redirect()->route('users.index'); // Adjust 'users.index' to your actual route name
     }
 }

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Your Cart</h1>
-    @if(session('cart'))
+    @if($cart)
         <table class="table">
             <thead>
                 <tr>
@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(session('cart') as $id => $details)
+                @foreach($cart as $id => $details)
                     <tr>
                         <td>{{ $details['name'] }}</td>
                         <td>{{ $details['quantity'] }}</td>
@@ -28,7 +28,7 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('order.place') }}" class="btn btn-primary">Place Order</a>
+        <a href="{{ route('checkout.show') }}" class="btn btn-primary">Place Order</a>
     @else
         <p>Your cart is empty.</p>
     @endif

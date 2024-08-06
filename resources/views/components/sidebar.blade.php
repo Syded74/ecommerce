@@ -23,7 +23,7 @@
             <i class="fas fa-list-alt mr-2"></i>
             <span>Manage Categories</span>
         </a>
-        <a href="{{ route('admin.users.create') }}" class="flex items-center px-4 py-2 hover:bg-green-700">
+        <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2 hover:bg-green-700">
             <i class="fas fa-user-plus mr-2"></i>
             <span>Create User</span>
         </a>

@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdminCreatedMail;
 
 class AdminController extends Controller
 {
@@ -41,6 +43,8 @@ class AdminController extends Controller
         Log::info('User created: ' . $user->id);
 
         $user->assignRole('user'); // Automatically assign the 'user' role
+
+        Mail::to($user->email)->send(new AdminCreatedMail($user));
 
         return redirect()->route('admin.dashboard')->with('success', 'User created successfully.');
     }

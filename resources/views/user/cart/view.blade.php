@@ -40,12 +40,11 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
+
+        </div>
     <div class="mt-6">
-        <form action="{{ route('order.place') }}" method="POST">
-            @csrf
-            <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300">Place Order</button>
-        </form>
+        <a href="{{ route('checkout.show') }}" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300">Proceed to Checkout</a>
     </div>
 </div>
+    
 @endsection

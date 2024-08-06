@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\CheckoutController;
 
 
 Route::get('/', [HomeController::class, 'showWelcomePage'])->name('welcome');
@@ -95,21 +96,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 });
 
-// routes/web.php
 
 // User dashboard route
 Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/user/dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('user.dashboard');
+    Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/dashboard', [UserController::class, 'show'])->name('user.show');
-    Route::post('/cart/add/{product}', [App\Http\Controllers\CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart/view', [App\Http\Controllers\CartController::class, 'viewCart'])->name('cart.view');
-    Route::get('/cart/remove/{id}', [App\Http\Controllers\CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/cart/place-order', [OrderController::class, 'placeOrder'])->name('order.place');
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::get('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    
+    // Add the checkout routes
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
-
- Route::get('profile', [UserProfileController::class, 'show'])->name('profile.show');
- Route::get('profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
- Route::patch('profile/update', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::get('profile', [UserProfileController::class, 'show'])->name('profile.show');
+    Route::get('profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile/update', [UserProfileController::class, 'update'])->name('profile.update');
 });
 
 
