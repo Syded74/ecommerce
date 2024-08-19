@@ -2,38 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('role:admin');
+    }
+
     public function show()
     {
         $admin = Auth::user();
-        return view('admin.profile.show', compact('admin'));
+        Log::info('AdminProfileController: show method called', ['user_id' => $admin->id, 'role' => $admin->getRoleNames()]);
+        
+        return view('admin.adminprofile.show', compact('admin'));
     }
 
     public function edit()
     {
         $admin = Auth::user();
-        return view('admin.profile.edit', compact('admin'));
+        return view('admin.adminprofile.edit', compact('admin'));
     }
 
     public function update(Request $request)
     {
         $admin = Auth::user();
         
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $admin->id,
-            // Add other fields as necessary
         ]);
 
-        $admin->update($request->only(['name', 'email']));
+        $admin->update($validated);
         
-        return redirect()->route('admin.profile.show')->with('success', 'Profile updated successfully.');
+        return redirect()->route('admin.admin-profile.show')->with('success', 'Profile updated successfully.');
     }
 }

@@ -18,6 +18,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
         'profile_photo', 
     ];
 
@@ -39,5 +40,10 @@ class User extends Authenticatable
     public function getAvatarAttribute($value)
     {
         return $value ? $value : 'path/to/default-avatar.png';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }

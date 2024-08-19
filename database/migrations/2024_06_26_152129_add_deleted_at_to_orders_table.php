@@ -4,26 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDeletedAtToProductsTable extends Migration
+class AddDeletedAtToOrdersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            // Comment out the line below
-            // $table->timestamp('deleted_at')->nullable();
+        Schema::table('orders', function (Blueprint $table) {
+            if (!Schema::hasColumn('orders', 'deleted_at')) {
+                $table->timestamp('deleted_at')->nullable();
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('deleted_at');
+        Schema::table('orders', function (Blueprint $table) {
+            if (Schema::hasColumn('orders', 'deleted_at')) {
+                $table->dropColumn('deleted_at');
+            }
         });
     }
 }

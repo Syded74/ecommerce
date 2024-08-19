@@ -7,17 +7,23 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    public function handle($request, Closure $next, $role)
-    {
-        if (!Auth::check()) {
-            return redirect('/login');
-        }
-
-        if (!$request->user()->hasRole($role)) {
-            abort(403, 'Unauthorized');
-        }
-
-        return $next($request);
-    }
+            public function handle($request, Closure $next, $role)
+            {
+                if (!Auth::check()) {
+                    return redirect('login');
+                }
+            
+                $userRole = $request->user()->role;
+            
+                // Check if the user's role matches any of the required roles
+                $roles = is_array($role) ? $role : explode('|', $role);
+            
+                if (!in_array($userRole, $roles)) {
+                    \Log::info('User ' . $request->user()->id . ' with role ' . $userRole . ' attempted to access a route requiring ' . implode(' or ', $roles));
+                    abort(403, 'Unauthorized action.');
+                }
+            
+                return $next($request);
+            }
 }
 

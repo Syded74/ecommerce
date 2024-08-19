@@ -12,11 +12,15 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'order_details',
-        'status', // Add the status field here
+        'payment_method',
+        'card_number',
+        'expiry_date',
+        'cvv',
+        'shipping_address',
+        'subtotal',
+        'tax',
+        'total'
     ];
-
-    protected $dates = ['deleted_at'];
 
     public function user()
     {
@@ -28,4 +32,4 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 }
- 
+
